@@ -16,8 +16,11 @@ def all_houses(filename):
     """
 
     houses = set()
-
-    # TODO: replace this with your code
+    people = all_data('cohort_data.txt')
+    for person in people:
+      house = person[1]
+      if house:
+        houses.add(house)
 
     return houses
 
@@ -51,8 +54,14 @@ def students_by_cohort(filename, cohort='All'):
     """
 
     students = []
+    people = all_data('cohort_data.txt')
+    
 
-    # TODO: replace this with your code
+    for person in people:
+      full_name = person[0]
+      cohort_name = person[3]
+      if cohort_name not in ('G', ('I')) and (cohort == cohort_name or cohort == 'All'):
+        students.append(full_name)
 
     return sorted(students)
 
@@ -96,9 +105,35 @@ def all_names_by_house(filename):
     ghosts = []
     instructors = []
 
-    # TODO: replace this with your code
+    people = all_data('cohort_data.txt')
 
-    return []
+    for person in people:
+      full_name = person[0]
+      
+      house = person[1]
+      cohort_name = person[3]
+
+      if house == "Dumbledore's Army":
+        dumbledores_army.append(full_name)
+      elif house == "Gryffindor":
+        gryffindor.append(full_name)
+      elif house == "Hufflepuff":
+        hufflepuff.append(full_name)
+      elif house == "Ravenclaw":
+        ravenclaw.append(full_name)
+      elif house == "Slytherin":
+        slytherin.append(full_name)
+      elif cohort_name == "I":
+        instructors.append(full_name)
+      else:
+        ghosts.append(full_name)
+
+    rosters = [dumbledores_army, gryffindor, hufflepuff, ravenclaw, slytherin,  
+               ghosts, instructors]
+    for roster in rosters:
+      roster = roster.sort()
+
+    return rosters
 
 
 def all_data(filename):
@@ -122,7 +157,22 @@ def all_data(filename):
 
     all_data = []
 
-    # TODO: replace this with your code
+    #open file and parse data to get house
+    file = open(filename)
+    for line in file:
+      line = line.rstrip()
+      line_items = line.split('|')
+
+      first_name = line_items[0]
+      last_name = line_items[1]
+      house = line_items[2]
+      advisor = line_items[3]
+      cohort = line_items[4]
+      full_name = first_name + ' ' + last_name
+
+      #create a tuple to hold data about a person, add to all_data
+      person = (full_name, house, advisor, cohort)
+      all_data.append(person)
 
     return all_data
 
@@ -147,8 +197,16 @@ def get_cohort_for(filename, name):
     Return:
       - str: the person's cohort or None
     """
+    people = all_data('cohort_data.txt')
 
-    # TODO: replace this with your code
+    for person in people:
+      full_name = person[1]
+      cohort_name = person[3]
+
+      if full_name == name:
+        return cohort
+      else:
+        return None
 
 
 def find_duped_last_names(filename):
