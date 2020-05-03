@@ -14,7 +14,6 @@ def all_houses(filename):
     Return:
       - set[str]: a set of strings
     """
-
     houses = set()
     people = all_data('cohort_data.txt')
     for person in people:
@@ -56,10 +55,10 @@ def students_by_cohort(filename, cohort='All'):
     students = []
     people = all_data('cohort_data.txt')
     
-
     for person in people:
       full_name = person[0]
       cohort_name = person[3]
+      
       if cohort_name not in ('G', ('I')) and (cohort == cohort_name or cohort == 'All'):
         students.append(full_name)
 
@@ -197,17 +196,15 @@ def get_cohort_for(filename, name):
     Return:
       - str: the person's cohort or None
     """
-    people = all_data('cohort_data.txt')
+    people = all_data(filename)
 
     for person in people:
-      full_name = person[1]
+      full_name = person[0]
       cohort_name = person[3]
 
       if full_name == name:
-        return cohort
-      else:
-        return None
-
+        return cohort_name
+      
 
 def find_duped_last_names(filename):
     """Return a set of duplicated last names that exist in the data.
@@ -222,8 +219,19 @@ def find_duped_last_names(filename):
     Return:
       - set[str]: a set of strings
     """
+    duplicates_set = set()
+    last_names = set()
 
-    # TODO: replace this with your code
+    for person in all_data(filename):
+      last_name = person[0].split(' ')[1]
+      
+      if last_name in last_names:
+        duplicates_set.add(last_name)
+
+      last_names.add(last_name)
+
+    return duplicates_set
+
 
 
 def get_housemates_for(filename, name):
@@ -237,8 +245,27 @@ def get_housemates_for(filename, name):
     >>> get_housemates_for('cohort_data.txt', 'Hermione Granger')
     {'Angelina Johnson', ..., 'Seamus Finnigan'}
     """
+    housemates = []
+    searched_student = None
 
-    # TODO: replace this with your code
+    people = all_data(filename)
+
+    for person in people:
+      if person[0] == name:
+          searched_student = person
+          searched_house = person[1]
+          searched_cohort = person[3]
+
+    for person in people:
+      full_name = person[0]
+      house = person[1]
+      cohort = person[3]
+      if house == searched_house and cohort == searched_cohort:
+        if full_name != name:
+          housemates.append(full_name)
+
+    return set(housemates)
+
 
 
 ##############################################################################
