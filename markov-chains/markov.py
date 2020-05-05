@@ -9,11 +9,10 @@ def open_and_read_file(file_path):
     Takes a string that is a file path, opens the file, and turns
     the file's contents as one string of text.
     """
-
+    #with keyword automatically closes the file
     with open(file_path) as file:
-        text_string = file.read()
-
-    return text_string
+        #file.read() returns the entire file as a string
+        return file.read()
 
 
 def make_chains(input_text):
@@ -43,33 +42,44 @@ def make_chains(input_text):
 
     chains = {}
 
-    #split into words
-    #make tuples (word[0], word[1]), (word[1],word[2])
-    #add tuples to dictionary as key with following word as the value
-
     words = input_text.split()
-    
-    for i in range(len(words)-3):
+    for i in range(len(words)-2):
+        #create a key
         key = (words[i], words[i+1])
 
+        #make chains
+        #if the key already exists in chains: 
+            #append the next word (words[i+2]) to the list
+        #else 
+            #add the key and assign value to new list
         if key in chains:
             chains[key].append(words[i+2])
         else:
-            chains[key] = [words[i+2]]
-
-    for k, v in chains.items():
-        print(k, v)
-    
+            chains[key] = [words[i+2]]   
 
     return chains
 
 
 def make_text(chains):
-    """Return text from chains."""
-
+    """Return text from chains"""
+    
     words = []
 
-    # your code goes here
+    #get a random link from the dictionary and add to words list
+    #choice requires a sequence as input
+    link = (choice(list(chains.keys())))
+    words.extend(link)
+    #get an additional word from the value list of the random key; add to list
+    additional_word = choice(chains[link])
+    words.append(additional_word)
+    
+    while True:
+        link = (link[1], additional_word)
+        if link in chains:
+            additional_word = choice(chains[link])
+            words.append(additional_word)
+        else:
+            break
 
     return " ".join(words)
 
@@ -83,6 +93,6 @@ input_text = open_and_read_file(input_path)
 chains = make_chains(input_text)
 
 # Produce random text
-# random_text = make_text(chains)
+random_text = make_text(chains)
 
-# print(random_text)
+print(random_text)
