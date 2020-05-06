@@ -55,7 +55,6 @@ def make_chains(input_text, n=2):
     for i in range(len(word_list)-2):
         #create tuple with word and the next word
         key = tuple(word_list[i:i+n])
-        key
 
         if key in chains:
             chains[key].append(word_list[i+2])
@@ -69,17 +68,31 @@ def make_text(chains):
     
     words = []
     starting_keys = []
+
     #make a list of keys that start with capital
     for key in chains.keys():
         if key[0].istitle():
             starting_keys.append(key)
-    print(starting_keys)
+    
+    #random key from the keys that are capitalized
+    link = choice(starting_keys)
+    words.extend(link)
+    next_word = choice(chains[link])
+    words.append(next_word)
 
-    starting_link = choice(starting_keys)
-    print(starting_link)
-    next_word = choice(chains[starting_link])
-    print(next_word) 
+    #continue making new keys and adding words until a key is not in dict.
+    #or a word with punctuation is added
+    while True:
+        link = (link[1], next_word)
+        if link in chains:
+            next_word = choice(chains[link])
+            words.append(next_word)
+            if next_word.endswith(('.', '!', '?')):
+                break
+        else:
+            break
 
+    return " ".join(words)
 
 input_path = "gettysburg.txt"
 
@@ -92,5 +105,5 @@ chains = make_chains(input_text,2)
 # Produce random text
 random_text = make_text(chains)
 
-#print(random_text)
+print(random_text)
             
